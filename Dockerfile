@@ -18,18 +18,16 @@ FROM ibmjava:8-jre
 # ZOOKEEPER
 ################################################
 
-ARG ARCHIVE
-ARG ARCHIVE_URL
-ARG CHECKSUM_URL
-ARG ZOOKEEPER_KEYS
+ARG ZOOKEEPER_VERSION
 
 RUN \
-	apt-get -y update && \
-	apt-get -y install && \
-	apt-get clean && \
+	ARCHIVE=apache-zookeeper-$ZOOKEEPER_VERSION-bin.tar.gz && \
+	ARCHIVE_URL=https://dist.apache.org/repos/dist/release/zookeeper/zookeeper-$ZOOKEEPER_VERSION/$ARCHIVE && \
+	CHECKSUM_URL=$ARCHIVE_URL.asc && \
+	KEYS_URL=https://dist.apache.org/repos/dist/release/zookeeper/KEYS && \
 	wget $ARCHIVE_URL && \
 	wget $CHECKSUM_URL && \
-	wget $ZOOKEEPER_KEYS && \
+	wget $KEYS_URL && \
 	gpg --import KEYS && \
 	gpg --verify $ARCHIVE.asc && \
 	mkdir /opt/zookeeper && \
@@ -40,4 +38,4 @@ RUN \
 	ln -s /opt/zookeeper/*zookeeper* /opt/zookeeper/default
 
 ENV PATH=$PATH:/opt/zookeeper/default/bin
-CMD bash --login -i
+ENTRYPOINT bash --login -i

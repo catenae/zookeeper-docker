@@ -1,2 +1,2 @@
 #!/bin/bash
-docker push catenae/zookeeper
+docker push catenae/zookeeper-base
