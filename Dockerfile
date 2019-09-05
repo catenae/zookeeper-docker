@@ -12,7 +12,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-FROM centos:7
+FROM ibmjava:8-jre
 
 ################################################
 # ZOOKEEPER
@@ -24,26 +24,20 @@ ARG CHECKSUM_URL
 ARG ZOOKEEPER_KEYS
 
 RUN \
-	yum -y update \
-	&& yum -y install \
-	wget \
-	ca-certificates \
-	java-1.8.0-openjdk-devel \
-	&& yum clean all \
-	&& wget $ARCHIVE_URL \
-	&& wget $CHECKSUM_URL \
-	&& wget $ZOOKEEPER_KEYS \
-	&& gpg --import KEYS \
-	&& gpg --verify $ARCHIVE.asc \
-	&& mkdir /opt/zookeeper \
-	&& tar xvf $ARCHIVE -C /opt/zookeeper \
-	&& rm -f $ARCHIVE \
-	&& rm -f $ARCHIVE.asc \
-	&& rm -f KEYS \
-	&& ln -s /opt/zookeeper/*zookeeper* /opt/zookeeper/default
+	apt-get -y update && \
+	apt-get -y install && \
+	apt-get clean && \
+	wget $ARCHIVE_URL && \
+	wget $CHECKSUM_URL && \
+	wget $ZOOKEEPER_KEYS && \
+	gpg --import KEYS && \
+	gpg --verify $ARCHIVE.asc && \
+	mkdir /opt/zookeeper && \
+	tar xvf $ARCHIVE -C /opt/zookeeper && \
+	rm -f $ARCHIVE && \
+	rm -f $ARCHIVE.asc && \
+	rm -f KEYS && \
+	ln -s /opt/zookeeper/*zookeeper* /opt/zookeeper/default
 
-ENV \
-	PATH=$PATH:/opt/zookeeper/default/bin \
-	JAVA_HOME=/usr
-
+ENV PATH=$PATH:/opt/zookeeper/default/bin
 CMD bash --login -i
